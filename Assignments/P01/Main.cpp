@@ -53,9 +53,11 @@ class Stack
 {
 private:
     int* stack;       //array pointer
-    int capacity; //max stack size
-    int top;      //current top (index)
-    int size;     //current num items
+    int capacity;     //max stack size
+    int top;          //current top (index)
+    int size;        //current num items
+    int minimumSize;  //minimum size of array
+    int maximumSize;  //maximum size of array
 public:
     /**
      * Stack:
@@ -72,6 +74,8 @@ public:
         stack = new int[capacity];  // allocate new memory
         top = -1;               // initialize top of stack
         size = 0;               // set stack to empty
+        minimumSize = 10;
+        maximumSize = 0;
     }
 
     /**
@@ -85,10 +89,12 @@ public:
      */
     Stack(int cap) 
     {
-        capacity = cap;         // set array size      
+        capacity = cap;             // set array size      
         stack = new int[capacity];  // allocate new memory
-        top = -1;               // initialize top of stack
-        size = 0;               // set stack to empty
+        top = -1;                  // initialize top of stack
+        size = 0;                  // set stack to empty
+        minimumSize = 10;         // minmum size of array
+        maximumSize = 0;          // maximum size of array
     }
 
     /**
@@ -102,17 +108,22 @@ public:
      */
     void Push(int data) 
     {
-        if (Full())                        //checking if array is already full
+        if (top==capacity-1)                        //checking if array is already full
         //resizes if array full
         {
-            int* biggerStack = new int[capacity * 2];
+            cout << " + : " << capacity << "->" << capacity *2 <<endl;
+            int* newStack = new int[capacity * 2];
             for (int i = 0; i < capacity; i++)
             {
-                biggerStack[i] = stack[i];     //copy old array items to new array
+                newStack[i] = stack[i];     //copy old array items to new array
             }
             delete[] stack;                    //delete old array
-            stack = biggerStack;               //adjust pointer to new array
+            stack = newStack;               //adjust pointer to new array
             capacity = capacity * 2;           //change capacity to twice original size
+            if (maximumSize < capacity)
+            {
+                maximumSize = capacity;   //set new max size of array
+            }
         }
         //normal action if array isn't full
         top++;              // move top of stack up
@@ -131,42 +142,27 @@ public:
      */
     int Pop()
     {
-        if (Empty())
+        if (top==-1)
         {
             cout << "Error: Stack empty!\n";
                 return -1;
+        }
+        if (capacity != minimumSize && size <= capacity / 2)
+        {
+            cout << " - : " << capacity << "->" << capacity / 2 << endl;
+            int* newStack = new int[capacity * 2];
+            for (int i = 0; i < capacity; i++)
+            {
+                newStack[i] = stack[i];     //copy old array items to new array
+            }
+            delete[] stack;                    //delete old array
+            stack = newStack;               //adjust pointer to new array
+            capacity = capacity / 2;
         }
         int data = stack[top];  // pull item from stack
         top--;              // shrink the stack
         size--;             // update our size  
         return data;        // send item back
-    }
-
-    /**
-     * Empty:
-     *    is the stack empty?
-     * Params:
-     *    void
-     *
-     * Returns:
-     *     bool : true == stack is empty
-     */
-    bool Empty() {
-        //return size == 0;
-        return top == -1;
-    }
-
-    /**
-     * Full:
-     *    is the stack full?
-     * Params:
-     *    void
-     *
-     * Returns:
-     *     bool : true == stack is full
-     */
-    bool Full() {
-        return top == capacity - 1;
     }
 
     /**
@@ -182,6 +178,33 @@ public:
         for (int i = top; i >= 0; i--) {
             cout << stack[i] << endl;
         }
+    }
+
+    /**
+ * Output:
+ *    Outputs starting, max, and ending size of array
+ * Params:
+ *    void
+ *
+ * Returns:
+ *     void
+ */
+
+    void Output()
+    {
+        ofstream outfile;                       //Create ouput file
+        outfile.open("output.txt");
+
+        outfile << "Name: John Williamson" << endl;
+        outfile << "Program : P01" << endl;
+        outfile << "Date : 15 Sep 2020\n" << endl;
+
+        outfile << "Starting size: " << minimumSize << endl;
+        outfile << "Max size: " << maximumSize << endl;
+        outfile << "Ending size: " << capacity << endl;
+
+        outfile.close();
+
     }
 
     /**
@@ -205,6 +228,10 @@ public:
 
 int main()
 {
+    cout << "Name: John Williamson" <<endl;
+    cout << "Program : P01" << endl;
+    cout << "Date : 15 Sep 2020" << endl;
+
     Stack Stack_1;           // calls default constructor
     ifstream infile;                        //read input file
     infile.open("input.txt");
@@ -224,7 +251,10 @@ int main()
     }
    
     infile.close();                         //close file
-    Stack_1.Print();                              //prints stack values to screen
+
+    Stack_1.Output();
+
+
 
     return 0;
 }
