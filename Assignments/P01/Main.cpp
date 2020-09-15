@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                   
-// Author:           Terry Griffin
-// Email:            terry.griffin@msutexas.edu
-// Label:            L02
+// Author:           John Williamson
+// Email:            john.c.williamson88@gmail.com
+// Label:            P01
 // Title:            Array Based Stack Example
 // Course:           2143
 // Semester:         Fall 2020
